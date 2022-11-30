@@ -7,6 +7,8 @@
 ! then sorts on the lengths of the sequences and the integer values themselves
 ! displaying only the 10 largest lengths
 
+! RECURSIVE VERSION
+
 program collatz
     implicit none
     type parallel
@@ -86,19 +88,23 @@ subroutine createArray(vals, x, y, size)
 
 end subroutine createArray
 
-!calculates the length of the collatz sequence of a number
-subroutine sequence(number, count)
+!calculates the length of the collatz sequence of a number recursively
+recursive subroutine sequence(number, count)
     implicit none
     integer :: number, count
+
+    if (number == 1) then
+        return
+    endif
+
+    if (modulo(number, 2) == 0) then
+        number = number / 2
+    else
+        number = number * 3 + 1
+    endif
+    count = count + 1
+    call sequence(number, count)
     
-    do while (number /= 1)
-        if (modulo(number, 2) == 0) then
-            number = number / 2
-        else
-            number = number * 3 + 1
-        endif
-        count = count + 1
-    enddo
 end subroutine sequence
 
 ! adapted from https://www.mjr19.org.uk/IT/sorts/sorts.f90
