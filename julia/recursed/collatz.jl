@@ -5,17 +5,19 @@ mutable struct parallel
     length::Int32
 end
 
-function sequence(num)
-    length = 0
-    while num != 1
-        if num % 2 == 0
-            num /= 2;
-        else
-            num = num * 3 + 1
-        end
-        length += 1
+function sequenceRecursed(num, length)
+    # length = 0
+    if num == 1
+        return length
     end
-    return length
+    
+    if num % 2 == 0
+        num /= 2;
+    else
+        num = num * 3 + 1
+    end
+    length += 1
+    sequenceRecursed(num, length)
 end
 
 function lengthSort(v::Array{parallel})
@@ -70,7 +72,7 @@ v = Array{parallel, 1}(undef, 51)
 
 for i in num1:num2
     index = i-num1+1
-    s = parallel(i, sequence(i))
+    s = parallel(i, sequenceRecursed(i, 0))
     v[index] = s
 end
 

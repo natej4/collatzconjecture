@@ -8,9 +8,9 @@ fn main() {
     let num1 = &args[1].parse::<u32>().unwrap();
     let num2 = &args[2].parse::<u32>().unwrap();
     let mut v : Vec<Parallel> = Vec::new();
-    let mut size: u32 = 1;
+    // let mut size: u32 = 1;
     
-    create_array(&mut v, *num1, *num2, &mut size);
+    create_array(&mut v, *num1, *num2);
 
     for p in 0..v.len() {
         sequence_recursed(v[p].num, &mut v[p].length);
@@ -31,7 +31,7 @@ fn main() {
 
 }
 
-fn create_array(v:&mut Vec<Parallel>, mut num1: u32, mut num2: u32, size:&mut u32) {
+fn create_array(v:&mut Vec<Parallel>, mut num1: u32, mut num2: u32) {
     if num1 > num2 {
         let temp = num1;
         num1 = num2;
@@ -40,9 +40,9 @@ fn create_array(v:&mut Vec<Parallel>, mut num1: u32, mut num2: u32, size:&mut u3
 
     for n in num1..num2+1 {
         v.push(Parallel{num:n, length:0});
-        *size += 1;
+        // *size += 1;
     }
-    *size -= 1;
+    // *size -= 1;
 }
 
 fn sequence_recursed(mut num:u32, length:&mut u32){
