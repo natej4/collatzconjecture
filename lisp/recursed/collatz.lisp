@@ -1,15 +1,13 @@
 #!/usr/bin/sbcl --script
 
-(defun collatz_sequence (num)
-(let ((length 0))
-(loop 
+(defun collatz_sequence (num length)
 (cond 
-    ((= num 1) (return length))
-    ((= (mod num 2) 0)
-        (setf num (/ num 2)))
-    ((/= (mod num 2) 0)
-        (setf num (+ 1 (* num 3)))))
-(setf length (+ length 1)))))
+    ((= num 1) (return-from collatz_sequence length))
+    (t 
+    (cond ((= (mod num 2) 0) (setf num (/ num 2)))
+        ((/= (mod num 2) 0) (setf num (+ 1 (* num 3)))))
+    (setf length (+ length 1))
+    (collatz_sequence num length))))
 
 (defun length_sort (nums lengths)
     (loop for i from 0 to (1- (length lengths))
@@ -37,13 +35,14 @@
 (defvar nums (make-array (list (1+ (- num2 num1)))))
 (defvar lengths (make-array (list (length nums))))
 (defvar nums_final (make-array '(10)))
+(defvar l 0)
 
 
 
 (progn 
 (loop for i from 0 to (1- (length nums))
     do (setf (aref nums i) (+ i num1)) 
-    (setf (aref lengths i) (collatz_sequence (aref nums i)))
+    (setf (aref lengths i) (collatz_sequence (aref nums i) l))
     )
 (length_sort nums lengths)
 (princ "Sorted based on sequence length:")

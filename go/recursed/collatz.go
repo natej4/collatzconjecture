@@ -28,11 +28,12 @@ func main(){
 	// nums := []int{}
 	// lengths := []int{}
 	var v  Parallel
+	length := 0
 	
 	createArray(&v, num1, num2)
 	for i := 0; i < len(v.nums); i++ {
-		length := sequence(v.nums[i])
-		v.lengths = append(v.lengths, length)
+		length_to_add := sequenceRecursed(v.nums[i], length)
+		v.lengths = append(v.lengths, length_to_add)
 		// fmt.Println(v.nums[i],"	", v.lengths[i])
 	}
 
@@ -59,18 +60,19 @@ func createArray(v *Parallel,num1, num2 int){
 	}
 }
 
-func sequence(num int) int{
+func sequenceRecursed(num, length int) int{
 	temp := num
-	length := 0
-	for temp != 1 {
-		if temp % 2 == 0 {
-			temp /= 2
-		} else {
-			temp = temp * 3 + 1
-		}
-		length += 1
+	// length := 0
+	if num == 1 {
+		return length
 	}
-	return length
+	if temp % 2 == 0 {
+		temp /= 2
+	} else {
+		temp = temp * 3 + 1
+	}
+	length += 1
+	return sequenceRecursed(temp, length)
 }
 
 func lengthSort(v *Parallel){
