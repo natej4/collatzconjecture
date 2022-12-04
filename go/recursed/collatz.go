@@ -1,17 +1,28 @@
 package main
+// Collatz Conjecture
+// Nate Jackson
+// CSC330 F22
 
+// Takes in two number from the command line, 
+// calculates the length of each number's collatz sequence,
+// then sorts on the lengths of the sequences and the integer values themselves
+// displaying only the 10 largest lengths
 import (
 	"fmt"
 	"os"
 	"strconv"
 )
-
+//struct of two parallel arrays
+//could not do array of structs like in other languages because of
+// the way go does pointers, couldn't make it work
+// but this works just as well
 type Parallel struct {
 	nums []int
 	lengths []int
 }
 
 func main(){
+	//command line input
 	num1, err1 := strconv.Atoi(os.Args[1])
 	if err1 != nil {
 		panic(err1)
@@ -25,19 +36,17 @@ func main(){
 		num1 = num2
 		num2 = temp
 	}
-	// nums := []int{}
-	// lengths := []int{}
 	var v  Parallel
 	length := 0
-	
+	// filling arrays, first nums, then sequence lengths
 	createArray(&v, num1, num2)
 	for i := 0; i < len(v.nums); i++ {
 		length_to_add := sequenceRecursed(v.nums[i], length)
 		v.lengths = append(v.lengths, length_to_add)
-		// fmt.Println(v.nums[i],"	", v.lengths[i])
 	}
 
 	lengthSort(&v)
+	// now that arrays are sorted, keep only top 10 values
 	v.nums = v.nums[0:10]
 	v.lengths = v.lengths[0:10]
 	fmt.Println("Sorted based on sequence length:")
@@ -54,15 +63,13 @@ func main(){
 }
 
 func createArray(v *Parallel,num1, num2 int){
-
 	for i := num1; i <= num2; i++ {
 		v.nums = append(v.nums, i)
 	}
 }
-
+//calculates length of collatz sequence for given number
 func sequenceRecursed(num, length int) int{
 	temp := num
-	// length := 0
 	if num == 1 {
 		return length
 	}
@@ -74,8 +81,9 @@ func sequenceRecursed(num, length int) int{
 	length += 1
 	return sequenceRecursed(temp, length)
 }
-
+// bubble sort of both arrays in struct
 func lengthSort(v *Parallel){
+	// if duplicate length values, keep only smallest integer
 	for i := 0; i < len(v.nums); i++ {
 		for j := 0; j < len(v.nums); j++ {
 			if v.nums[i] != v.nums[j] && v.lengths[i] == v.lengths[j] {
@@ -97,7 +105,8 @@ func lengthSort(v *Parallel){
 		} 
 	}
 }
-
+//bubble sort based on integer values
+//will only ever sort 10 values
 func integerSort(v *Parallel){
 	for i := len(v.nums)-1; i >= 0; i-- {
 		for j := 0; j < i; j++ {
