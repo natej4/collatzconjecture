@@ -1,6 +1,15 @@
 #!/usr/bin/sbcl --script
+;;  Collatz Conjecture
+;;  Nate Jackson
+;;  CSC330 F22
+
+;;  Takes in two number from the command line, 
+;;  calculates the length of each number's collatz sequence,
+;;  then sorts on the lengths of the sequences and the integer values themselves
+;;  displaying only the 10 largest lengths
 
 (defun collatz_sequence (num length)
+"Calculates length of collatz sequence for given number"
 (cond 
     ((= num 1) (return-from collatz_sequence length))
     (t 
@@ -10,11 +19,12 @@
     (collatz_sequence num length))))
 
 (defun length_sort (nums lengths)
+"Bubble sort based on collatz lengths"
+    ;; if duplicated lengths, only keep smallest integer
     (loop for i from 0 to (1- (length lengths))
         do (loop for j from 0 to (1- (length lengths))
             do (cond ((and (/= (aref nums i) (aref nums j)) (= (aref lengths i) (aref lengths j)))
                 (setf (aref lengths j) 0)))))
-
     (loop for i from (1- (length lengths)) downto 0 do
         (loop for j from 0 to (1- i)
             when (>= (aref lengths (1+ j)) (aref lengths j))
@@ -22,12 +32,14 @@
                (rotatef (aref nums (1+ j)) (aref nums j)))))
 
 (defun int_sort (nums_final lengths)
+"Bubble sort based on integer values"
 (loop for i from (1- (length nums_final)) downto 0 do
         (loop for j from 0 to (1- i)
             when (>= (aref nums_final (1+ j)) (aref nums_final j))
                do (rotatef (aref nums_final (1+ j)) (aref nums_final j))
                (rotatef (aref lengths (1+ j)) (aref lengths j)))))
 
+;; Global declarations
 (defvar num1 (parse-integer(nth 1 sb-ext:*posix-argv*)))
 (defvar num2 (parse-integer (nth 2 sb-ext:*posix-argv*)))
 (when (> num1 num2)
@@ -36,10 +48,9 @@
 (defvar lengths (make-array (list (length nums))))
 (defvar nums_final (make-array '(10)))
 (defvar l 0)
-
-
-
+;; Main
 (progn 
+;; fill arrays
 (loop for i from 0 to (1- (length nums))
     do (setf (aref nums i) (+ i num1)) 
     (setf (aref lengths i) (collatz_sequence (aref nums i) l))
