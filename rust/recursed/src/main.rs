@@ -1,4 +1,13 @@
 use std::env;
+// Collatz Conjecture
+// Nate Jackson
+// CSC330 F22
+
+// Takes in two number from the command line, 
+// calculates the length of each number's collatz sequence,
+// then sorts on the lengths of the sequences and the integer values themselves
+// displaying only the 10 largest lengths
+
 struct Parallel {
     num: u32,
     length: u32
@@ -8,15 +17,14 @@ fn main() {
     let num1 = &args[1].parse::<u32>().unwrap();
     let num2 = &args[2].parse::<u32>().unwrap();
     let mut v : Vec<Parallel> = Vec::new();
-    // let mut size: u32 = 1;
-    
+    // filling arrays, first nums, then sequence lengths
     create_array(&mut v, *num1, *num2);
-
     for p in 0..v.len() {
         sequence_recursed(v[p].num, &mut v[p].length);
     }
 
     length_sort(&mut v);
+	// now that arrays are sorted, keep only top 10 values
     v.truncate(10);
     println!("Sorted based on sequence length:");
     for i in 0..v.len() {
@@ -40,11 +48,9 @@ fn create_array(v:&mut Vec<Parallel>, mut num1: u32, mut num2: u32) {
 
     for n in num1..num2+1 {
         v.push(Parallel{num:n, length:0});
-        // *size += 1;
     }
-    // *size -= 1;
 }
-
+//calculates length of collatz sequence for given number
 fn sequence_recursed(mut num:u32, length:&mut u32){
     if num == 1 {
         return
@@ -60,8 +66,9 @@ fn sequence_recursed(mut num:u32, length:&mut u32){
     sequence_recursed(num, length);
     
 }
-
+// bubble sort based on sequence length
 fn length_sort(v:&mut Vec<Parallel>){
+	// if duplicate length values, keep only smallest integer
     for _i in 0..v.len() {
         for j in 0..v.len() {
             if v[_i].num != v[j].num && v[_i].length == v[j].length {
@@ -83,7 +90,7 @@ fn length_sort(v:&mut Vec<Parallel>){
         }
     }
 }
-
+//bubble sort based on integer values
 fn integer_sort(v:&mut Vec<Parallel>){
     for i in (0..v.len()).rev() {
         for j in 0..i {
